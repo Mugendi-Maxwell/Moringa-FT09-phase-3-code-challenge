@@ -17,12 +17,13 @@ def main():
 
     # Connect to the database
     conn = get_db_connection()
-    cursor = conn.cursor()
 
+    # Create a cursor and interact with the database
+    cursor = conn.cursor()
 
     '''
         The following is just for testing purposes, 
-        you can modify it to meet the requirements of your implmentation.
+        you can modify it to meet the requirements of your implementation.
     '''
 
     # Create an author
@@ -51,20 +52,25 @@ def main():
     cursor.execute('SELECT * FROM articles')
     articles = cursor.fetchall()
 
-    conn.close()
+    # Do not close the connection yet
+    # conn.close()   # <-- Remove this line
 
     # Display results
     print("\nMagazines:")
     for magazine in magazines:
-        print(Magazine(magazine["id"], magazine["name"], magazine["category"]))
+        # Pass the connection `conn` to the Magazine class
+        print(Magazine(id=magazine[0], name=magazine[1], category=magazine[2], connection=conn))
 
     print("\nAuthors:")
     for author in authors:
-        print(Author(author["id"], author["name"]))
+        print(Author(id=author[0], name=author[1], connection=conn))
 
     print("\nArticles:")
     for article in articles:
-        print(Article(article["id"], article["title"], article["content"], article["author_id"], article["magazine_id"]))
+        print(Article(id=article[0], title=article[1], content=article[2], author_id=article[3], magazine_id=article[4]))
+
+    # Close the connection after all the operations
+    conn.close()
 
 if __name__ == "__main__":
     main()
